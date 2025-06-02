@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>註冊</title>
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="icon" href="../img/number.png" type="image/png">
+</head>
+<body>
+    <h2>註冊</h2>
+    <form method="post">
+        帳號: <input type="text" name="username" required><br>
+        密碼: <input type="password" name="password" required>
+        <br>
+        <br>
+        <input type="submit" value="註冊">
+        <p>已有帳號? <a href="login.html">登入</a></p>
+        <a href="index.html">回首頁</a>
+    </form>
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+</body>
+</html>

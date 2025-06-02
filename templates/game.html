@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>猜數字遊戲</title>
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="icon" href="../img/number.png" type="image/png">
+</head>
+<body>
+    <h2>猜數字遊戲</h2>
+    <p>你好, {{ username }}! <a href="{{ url_for('logout') }}">登出</a></p>
+    <form method="post">
+        猜一個 1~100 的數字: <input type="number" name="guess" min="1" max="100" required>
+        <input type="submit" value="Enter">
+        {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    </form>
+    <h3>紀錄</h3>
+    <table border="1">
+        <tr>
+            <th>次數</th>
+            <th>猜的數字</th>
+            <th>結果</th>
+        </tr>
+        {% for item in history %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ item.guess }}</td>
+            <td>{{ item.result }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

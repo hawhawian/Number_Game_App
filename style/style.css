@@ -1,0 +1,24 @@
+body{
+    background-color: #D2E9FF;
+    text-align: center;
+}
+
+form, table, h1, h2, h3, p, button, a {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+table {
+    margin-top: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    min-width: 0;
+    max-width: 320px;
+    border-collapse: collapse;
+}
+
+td, th {
+    text-align: center;
+}
