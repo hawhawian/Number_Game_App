@@ -1,13 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 import random
+from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-USERS = {
-    'user1': 'password1',
-    'user2': 'password2'
-}
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_PORT'] = 3306
+app.config['MYSQL_USER'] = 'your_mysql_user'
+app.config['MYSQL_PASSWORD'] = 'your_mysql_password'
+app.config['MYSQL_DB'] = 'number_game'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+mysql = MySQL(app)
 
 @app.route('/')
 def index():
@@ -25,7 +29,11 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username in USERS and USERS[username] == password:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
+        user = cur.fetchone()
+        cur.close()
+        if user:
             session['username'] = username
             session['answer'] = random.randint(1, 100)
             session['tries'] = 0
@@ -41,11 +49,20 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username in USERS:
-            error = '帳號已存在'
-        else:
-            USERS[username] = password
-            return redirect(url_for('login'))
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM users WHERE username=%s", (username,))
+            user = cur.fetchone()
+            if user:
+                error = '帳號已存在'
+            else:
+                cur.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
+                mysql.connection.commit()
+                cur.close()
+                return redirect(url_for('login'))
+            cur.close()
+        except Exception as e:
+            error = f'資料庫連線錯誤: {e}'
     return render_template('register.html', error=error)
 
 @app.route('/game.html', methods=['GET', 'POST'])
