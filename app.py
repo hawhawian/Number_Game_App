@@ -66,9 +66,11 @@ def game():
         if guess == answer:
             message = f'恭喜你猜對了! 正解是{answer}，共猜了 {session["tries"]} 次，繼續輸入來繼續遊戲吧!'
             result = '答對'
+
             session['answer'] = random.randint(1, 100)
             session['tries'] = 0
             session['history'].append({'guess': guess, 'result': result})
+
             session['history'] = []
         elif guess is not None:
             if guess < answer:
